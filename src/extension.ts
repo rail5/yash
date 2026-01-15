@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { newSemanticTokenProvider } from './modes/semanticProvider';
 import { getLanguageModes } from './modes/languageModes';
 import { runSafe } from './runner';
+import { decorateComponentNumbers } from './languages/yaccComponentNumbers';
 const pendingValidationRequests: { [uri: string]: NodeJS.Timer } = {};
 const validationDelayMs = 500;
 
@@ -151,4 +152,12 @@ async function validateTextDocument(document: vscode.TextDocument, force?: boole
 	}
 	diagnostics.set(document.uri, mode.doValidation(document, force));
 	configurationChanged = false;
+
+	if (document.languageId === 'yacc' && typeof mode.getParsedDocument === 'function') {
+		const yaccDoc = mode.getParsedDocument(document);
+		const editor: vscode.TextEditor | undefined = vscode.window.visibleTextEditors.find((e: vscode.TextEditor) => e.document === document);
+		if (editor && yaccDoc) {
+			decorateComponentNumbers(editor, yaccDoc);
+		}
+	}
 }
