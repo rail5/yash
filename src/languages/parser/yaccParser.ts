@@ -456,7 +456,7 @@ export function parse(text: string): YACCDocument {
                 if (state !== ParserState.WaitingRule) {
                     addProblem(`Unexpected | symbol.`, scanner.getTokenOffset(), scanner.getTokenEnd(), ProblemType.Error);
                 } else {
-                    // Record production boundary so that the ComponetNumber decorations can separate alternative productions
+                    // Record production boundary so that the ComponentNumber decorations can separate alternative productions
                     document.components.push({
                         terminal: true,
                         offset: offset,
