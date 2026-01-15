@@ -455,6 +455,19 @@ export function parse(text: string): YACCDocument {
             case TokenType.Bar:
                 if (state !== ParserState.WaitingRule) {
                     addProblem(`Unexpected | symbol.`, scanner.getTokenOffset(), scanner.getTokenEnd(), ProblemType.Error);
+                } else {
+                    // Record production boundary so that the ComponetNumber decorations can separate alternative productions
+                    document.components.push({
+                        terminal: true,
+                        offset: offset,
+                        length: scanner.getTokenLength(),
+                        end: scanner.getTokenEnd(),
+                        name: '|',
+                        type: '',
+                        used: true,
+                        definition: [-1, -1],
+                        references: [[offset, scanner.getTokenEnd()]]
+                    });
                 }
                 break;
             default:
@@ -471,6 +484,9 @@ export function parse(text: string): YACCDocument {
 
     for (let i = 0; i < document.components.length; i++) {
         const component = document.components[i];
+        if (component.name === '|') {
+            continue;
+        }
         let symbol: ISymbol;
         if ((symbol = document.symbols[component.name])) {
             component.terminal = false;
