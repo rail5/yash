@@ -46,6 +46,7 @@ export interface LanguageMode {
     // getFoldingRanges?: (document: TextDocument) => FoldingRange[];
     getSemanticTokens?(document: TextDocument): SemanticTokenData[];
     getSemanticTokenLegend?(): { types: string[], modifiers: string[] };
+    getParsedDocument?(document: TextDocument): any;
     onDocumentRemoved(document: TextDocument): void;
     dispose(): void;
 }

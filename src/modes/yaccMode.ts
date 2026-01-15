@@ -50,6 +50,9 @@ export function getYACCMode(yaccLanguageService: YACCLanguageService): LanguageM
         getSemanticTokenLegend() {
             return { types: tokenTypes, modifiers: tokenModifiers };
         },
+        getParsedDocument(document: TextDocument): YACCDocument {
+            return cache.get(document);
+        },
         onDocumentRemoved(document: TextDocument) {
             cache.onDocumentRemoved(document);
         },
